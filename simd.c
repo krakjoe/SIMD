@@ -86,6 +86,23 @@ ZEND_BEGIN_ARG_INFO_EX(php_float32x4_op_arginfo, 0, 0, 1)
 	ZEND_ARG_OBJ_INFO(0, op, Float32x4, 0)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(php_float32x4_offsetGet_arginfo, 0, 0, 1)
+	ZEND_ARG_INFO(0, offset)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(php_float32x4_offsetSet_arginfo, 0, 0, 1)
+	ZEND_ARG_INFO(0, offset)
+	ZEND_ARG_INFO(0, data)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(php_float32x4_offsetUnset_arginfo, 0, 0, 1)
+	ZEND_ARG_INFO(0, offset)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(php_float32x4_offsetExists_arginfo, 0, 0, 1)
+	ZEND_ARG_INFO(0, offset)
+ZEND_END_ARG_INFO()
+
 PHP_METHOD(Float32x4, __construct) {
 	double lanes[4] = php_float32x4_empty;
 	float  flanes[4] 
@@ -119,6 +136,27 @@ php_float32x4_method(andnot)
 php_float32x4_method(or)
 php_float32x4_method(xor)
 
+PHP_METHOD(Float32x4, offsetGet)    {
+	long offset = -1;
+	php_float32x4_t *p = php_float32x4_fetch();
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &offset) != SUCCESS) {
+		return;
+	}
+	
+	/* check boundaries and return double */
+	if (offset < 4 && offset > -1) {
+		RETURN_DOUBLE((*p->v)[offset]);
+	}
+	
+	RETURN_DOUBLE(-1);
+}
+
+/* none of these are legal, yet */
+PHP_METHOD(Float32x4, offsetSet)    {}
+PHP_METHOD(Float32x4, offsetExists) {}
+PHP_METHOD(Float32x4, offsetUnset)  {}
+
 zend_function_entry php_float32x4_methods[] = {
 	PHP_ME(Float32x4, __construct,         php_float32x4_construct_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, add,                 php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
@@ -131,6 +169,10 @@ zend_function_entry php_float32x4_methods[] = {
 	PHP_ME(Float32x4, andnot,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, or,                  php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, xor,                 php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, offsetGet,           php_float32x4_offsetGet_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, offsetSet,           php_float32x4_offsetSet_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, offsetUnset,         php_float32x4_offsetUnset_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, offsetExists,        php_float32x4_offsetExists_arginfo, ZEND_ACC_PUBLIC)
 	PHP_FE_END
 };
 
@@ -175,10 +217,10 @@ static HashTable *php_float32x4_dump(zval *obj, int *is_temp TSRMLS_DC) /* {{{ *
 	*is_temp = 1;
 	
 	array_init(&zv);
-	add_assoc_double(&zv, "x", (*p->v)[0]);
-	add_assoc_double(&zv, "y", (*p->v)[1]);
-	add_assoc_double(&zv, "z", (*p->v)[2]);
-	add_assoc_double(&zv, "w", (*p->v)[3]);
+	add_next_index_double(&zv, (*p->v)[0]);
+	add_next_index_double(&zv, (*p->v)[1]);
+	add_next_index_double(&zv, (*p->v)[2]);
+	add_next_index_double(&zv, (*p->v)[3]);
 	return Z_ARRVAL(zv);
 }
 /* }}} */
@@ -221,7 +263,7 @@ static zval *php_float32x4_read( zval *object, zval *member, int type, const str
 	if (!member || Z_TYPE_P(member) != IS_STRING || !Z_STRLEN_P(member)) {
 		return property;
 	}
-
+		
 	switch (Z_STRVAL_P(member)[0]) {
 		case 'x':
 			ALLOC_INIT_ZVAL(property);
@@ -258,6 +300,7 @@ PHP_MINIT_FUNCTION(simd)
 	INIT_CLASS_ENTRY(ce, "Float32x4", php_float32x4_methods);
 	php_float32x4_ce = zend_register_internal_class(&ce TSRMLS_CC);
 	php_float32x4_ce->create_object = php_float32x4_create;
+	zend_class_implements(php_float32x4_ce TSRMLS_CC, 1, zend_ce_arrayaccess);
 
 	memcpy(
 		&php_float32x4_handlers,

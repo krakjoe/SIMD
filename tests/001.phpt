@@ -12,14 +12,13 @@ var_dump($vec[2]);
 ?>
 --EXPECTF--
 object(Float32x4)#%d (%d) {
-  ["x"]=>
+  [0]=>
   float(11)
-  ["y"]=>
+  [1]=>
   float(22)
-  ["z"]=>
+  [2]=>
   float(33)
-  ["w"]=>
+  [3]=>
   float(44)
 }
-
 
