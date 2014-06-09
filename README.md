@@ -6,8 +6,8 @@ This extension exposes SIMD SSE instructions for use in PHP ... for whatever rea
 
 ```php
 <?php
-class Float32x4 implements ArrayAccess {
-	public function __construct(float $z, float $y, float $x, float $w)
+class Float32x4 {
+	public function __construct(float $x, float $y, float $z, float $w)
 	public function add(Float32x4 $v);
 	public function sub(Float32x4 $v);
 	public function div(Float32x4 $v);
@@ -18,6 +18,11 @@ class Float32x4 implements ArrayAccess {
 	public function andNot(Float32x4 $v);
 	public function or(Float32x4 $v);
 	public function xor(Float32x4 $v);
+	
+	public $x;
+	public $y;
+	public $z;
+	public $w;
 }
 ?>
 ```
