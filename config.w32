@@ -1,0 +1,13 @@
+// $Id$
+// vim:ft=javascript
+
+// If your extension references something external, use ARG_WITH
+// ARG_WITH("simd", "for simd support", "no");
+
+// Otherwise, use ARG_ENABLE
+// ARG_ENABLE("simd", "enable simd support", "no");
+
+if (PHP_SIMD != "no") {
+	EXTENSION("simd", "simd.c");
+}
+
