@@ -175,10 +175,10 @@ static HashTable *php_float32x4_dump(zval *obj, int *is_temp TSRMLS_DC) /* {{{ *
 	*is_temp = 1;
 	
 	array_init(&zv);
-	add_next_index_double(&zv, (*p->v)[0]);
-	add_next_index_double(&zv, (*p->v)[1]);
-	add_next_index_double(&zv, (*p->v)[2]);
-	add_next_index_double(&zv, (*p->v)[3]);
+	add_assoc_double(&zv, "x", (*p->v)[0]);
+	add_assoc_double(&zv, "y", (*p->v)[1]);
+	add_assoc_double(&zv, "z", (*p->v)[2]);
+	add_assoc_double(&zv, "w", (*p->v)[3]);
 	return Z_ARRVAL(zv);
 }
 /* }}} */
@@ -221,7 +221,7 @@ static zval *php_float32x4_read( zval *object, zval *member, int type, const str
 	if (!member || Z_TYPE_P(member) != IS_STRING || !Z_STRLEN_P(member)) {
 		return property;
 	}
-		
+
 	switch (Z_STRVAL_P(member)[0]) {
 		case 'x':
 			ALLOC_INIT_ZVAL(property);

@@ -13,14 +13,15 @@ var_dump
 ?>
 --EXPECTF--
 object(Float32x4)#%d (%d) {
-  [0]=>
+  ["x"]=>
   float(10)
-  [1]=>
+  ["y"]=>
   float(10)
-  [2]=>
+  ["z"]=>
   float(10)
-  [3]=>
+  ["w"]=>
   float(10)
 }
+
 
 
