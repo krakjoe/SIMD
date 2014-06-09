@@ -45,15 +45,21 @@ Operators
 
 The following operators will work on Float32x4 vectors as expected:
 
- * + -> ```add```
- * / -> ```div```
- * * -> ```mul```
- * - -> ```sub```
- * | -> ```or```
- * ^ -> ```xor```
- * & -> ```and```
- * ~ -> ```andNot```
-
+ * + -> ```addition```
+ * / -> ```division```
+ * * -> ```multiplication```
+ * - -> ```subtraction```
+ * | -> ```bitwise or```
+ * ^ -> ```bitwise xor```
+ * & -> ```bitwise and```
+ * ~ -> ```bitwise not```
+ * == -> ```equal```
+ * != -> ```not equal```
+ * >  -> ```larger than```
+ * <  -> ```smaller than```
+ * <= -> ```smaller than or equal```
+ * >= -> ```greater than or equal```
+ 
 Enjoy folks ;)
 
 http://en.wikipedia.org/wiki/SIMD

@@ -274,7 +274,15 @@ static int php_float32x4_operation(zend_uchar op, zval *returns, zval *op1, zval
 			php_float32x4_operator(returns, result, p1, p2, xor);
 		case ZEND_BW_NOT:
 			php_float32x4_operator(returns, result, p1, p2, andnot);
-			
+		case ZEND_IS_EQUAL:
+			php_float32x4_operator(returns, result, p1, p2, cmpeq);
+		case ZEND_IS_NOT_EQUAL:
+			php_float32x4_operator(returns, result, p1, p2, cmpneq);
+		case ZEND_IS_SMALLER:
+			php_float32x4_operator(returns, result, p1, p2, cmplt);
+		case ZEND_IS_SMALLER_OR_EQUAL:
+			php_float32x4_operator(returns, result, p1, p2, cmple);
+		
 		default:
 			return FAILURE;
 	}
