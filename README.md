@@ -4,7 +4,7 @@ SIMD
 
 This extension exposes SIMD SSE instructions for use in PHP ... for whatever reason you like ...
 
-```
+```php
 <?php
 class Float32x4 {
 	public function add(Float32x4 $v);
@@ -26,13 +26,13 @@ Operators
 
 The following operators will work on Float32x4 vectors as expected:
 
-	* + -> add
-	* / -> div
-	* * -> mul
-	* - -> sub
-	* | -> or
-	* ^ -> xor
-	* & -> and
-	* ~ -> andNot
+ * + -> ```add```
+ * / -> ```div```
+ * * -> ```mul```
+ * - -> ```sub```
+ * | -> ```or```
+ * ^ -> ```xor```
+ * & -> ```and```
+ * ~ -> ```andNot```
 
 Enjoy folks ;)
