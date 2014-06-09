@@ -132,19 +132,6 @@ php_float32x4_method(andnot)
 php_float32x4_method(or)
 php_float32x4_method(xor)
 
-php_float32x4_method(cmpeq)
-php_float32x4_method(cmpneq)
-php_float32x4_method(cmplt)
-php_float32x4_method(cmple)
-php_float32x4_method(cmpgt)
-php_float32x4_method(cmpge)
-php_float32x4_method(cmpnlt)
-php_float32x4_method(cmpnle)
-php_float32x4_method(cmpngt)
-php_float32x4_method(cmpnge)
-php_float32x4_method(cmpord)
-php_float32x4_method(cmpunord)
-
 PHP_METHOD(Float32x4, offsetGet)    {
 	long offset = -1;
 	php_float32x4_t *p = php_float32x4_fetch();
@@ -178,18 +165,6 @@ zend_function_entry php_float32x4_methods[] = {
 	PHP_ME(Float32x4, andnot,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, or,                  php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, xor,                 php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(Float32x4, cmpeq,               php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(Float32x4, cmpneq,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(Float32x4, cmplt,               php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(Float32x4, cmple,               php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(Float32x4, cmpgt,               php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(Float32x4, cmpge,               php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(Float32x4, cmpnlt,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(Float32x4, cmpnle,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(Float32x4, cmpngt,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(Float32x4, cmpnge,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(Float32x4, cmpord,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(Float32x4, cmpunord,            php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, offsetGet,           php_float32x4_offsetGet_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, offsetSet,           php_float32x4_offsetSet_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, offsetUnset,         php_float32x4_offsetUnset_arginfo, ZEND_ACC_PUBLIC)
@@ -274,14 +249,6 @@ static int php_float32x4_operation(zend_uchar op, zval *returns, zval *op1, zval
 			php_float32x4_operator(returns, result, p1, p2, xor);
 		case ZEND_BW_NOT:
 			php_float32x4_operator(returns, result, p1, p2, andnot);
-		case ZEND_IS_EQUAL:
-			php_float32x4_operator(returns, result, p1, p2, cmpeq);
-		case ZEND_IS_NOT_EQUAL:
-			php_float32x4_operator(returns, result, p1, p2, cmpneq);
-		case ZEND_IS_SMALLER:
-			php_float32x4_operator(returns, result, p1, p2, cmplt);
-		case ZEND_IS_SMALLER_OR_EQUAL:
-			php_float32x4_operator(returns, result, p1, p2, cmple);
 		
 		default:
 			return FAILURE;

@@ -19,19 +19,6 @@ class Float32x4 {
 	public function or(Float32x4 $v);
 	public function xor(Float32x4 $v);
 	
-	public function cmpeq(Float32x4 $v);
-	public function cmpneq(Float32x4 $v);
-	public function cmplt(Float32x4 $v);
-	public function cmple(Float32x4 $v);
-	public function cmpgt(Float32x4 $v);
-	public function cmpge(Float32x4 $v);
-	public function cmpnlt(Float32x4 $v);
-	public function cmpnle(Float32x4 $v);
-	public function cmpngt(Float32x4 $v);
-	public function cmpnge(Float32x4 $v);
-	public function cmpord(Float32x4 $v);
-	public function cmpunord(Float32x4 $v);
-	
 	public $x;
 	public $y;
 	public $z;
@@ -53,12 +40,6 @@ The following operators will work on Float32x4 vectors as expected:
  * ^ -> ```bitwise xor```
  * & -> ```bitwise and```
  * ~ -> ```bitwise not```
- * == -> ```equal```
- * != -> ```not equal```
- * >  -> ```larger than```
- * <  -> ```smaller than```
- * <= -> ```smaller than or equal```
- * >= -> ```greater than or equal```
  
 Enjoy folks ;)
 
