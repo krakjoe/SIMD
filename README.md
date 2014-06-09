@@ -9,7 +9,7 @@ http://en.wikipedia.org/wiki/SIMD
 ```php
 <?php
 class Float32x4 {
-	public function __construct(double $z, double $y, double $x, double $w)
+	public function __construct(float $z, float $y, float $x, float $w)
 	public function add(Float32x4 $v);
 	public function sub(Float32x4 $v);
 	public function div(Float32x4 $v);
