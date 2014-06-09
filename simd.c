@@ -230,6 +230,11 @@ static int php_float32x4_operation(zend_uchar op, zval *returns, zval *op1, zval
 	php_float32x4_t *p1 = php_float32x4_fetch_ex(op1),
 					*p2 = php_float32x4_fetch_ex(op2),
 					*result  = NULL;
+					
+	if (!p1 || !p2) {
+		return FAILURE;
+	}
+	
 	switch (op)
 	{
 		case ZEND_ADD:
