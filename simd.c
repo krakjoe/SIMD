@@ -34,13 +34,11 @@ zend_object_handlers php_float32x4_handlers;
 
 #define php_float32x4_fetch_ex(o)    ((php_float32x4_t*) zend_object_store_get_object(o TSRMLS_CC))
 #define php_float32x4_fetch()        php_float32x4_fetch_ex(getThis())
-#define php_float32x4_align(s)		__attribute__ ((aligned (s)))
 #define php_float32x4_empty          {0.0, 0.0, 0.0, 0.0}
 
 #define php_float32x4_method(n)		PHP_METHOD(Float32x4, n) {	\
 	zval *zo; \
 	php_float32x4_t *op1, *op2, *result; \
-	__m128 v; \
 	\
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "O", &zo, php_float32x4_ce) != SUCCESS) { \
 		return; \
@@ -105,10 +103,8 @@ ZEND_END_ARG_INFO()
 
 PHP_METHOD(Float32x4, __construct) {
 	double lanes[4] = php_float32x4_empty;
-	float  flanes[4] 
-		php_float32x4_align(16) = php_float32x4_empty;
+	float  flanes[4] = php_float32x4_empty;
 	php_float32x4_t *p = php_float32x4_fetch();
-	__m128 v;
 	
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &lanes[0], &lanes[1], &lanes[2], &lanes[3]) != SUCCESS) {
 		return;
@@ -135,6 +131,19 @@ php_float32x4_method(and)
 php_float32x4_method(andnot)
 php_float32x4_method(or)
 php_float32x4_method(xor)
+
+php_float32x4_method(cmpeq)
+php_float32x4_method(cmpneq)
+php_float32x4_method(cmplt)
+php_float32x4_method(cmple)
+php_float32x4_method(cmpgt)
+php_float32x4_method(cmpge)
+php_float32x4_method(cmpnlt)
+php_float32x4_method(cmpnle)
+php_float32x4_method(cmpngt)
+php_float32x4_method(cmpnge)
+php_float32x4_method(cmpord)
+php_float32x4_method(cmpunord)
 
 PHP_METHOD(Float32x4, offsetGet)    {
 	long offset = -1;
@@ -169,6 +178,18 @@ zend_function_entry php_float32x4_methods[] = {
 	PHP_ME(Float32x4, andnot,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, or,                  php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, xor,                 php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, cmpeq,               php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, cmpneq,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, cmplt,               php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, cmple,               php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, cmpgt,               php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, cmpge,               php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, cmpnlt,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, cmpnle,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, cmpngt,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, cmpnge,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, cmpord,              php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(Float32x4, cmpunord,            php_float32x4_op_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, offsetGet,           php_float32x4_offsetGet_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, offsetSet,           php_float32x4_offsetSet_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(Float32x4, offsetUnset,         php_float32x4_offsetUnset_arginfo, ZEND_ACC_PUBLIC)
