@@ -122,7 +122,7 @@ PHP_METHOD(Float32x4, __construct) {
 	posix_memalign(
 		(void**) &p->v, 16, sizeof(__m128));
 	
-	*p->v = _mm_loadu_ps (flanes);
+	*p->v = _mm_load_ps (flanes);
 }
 
 php_float32x4_method(add)
