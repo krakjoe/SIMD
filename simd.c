@@ -209,14 +209,18 @@ static HashTable *php_float32x4_dump(zval *obj, int *is_temp TSRMLS_DC) /* {{{ *
 {
 	php_float32x4_t *p = php_float32x4_fetch_ex(obj);
 	zval zv;
-
-	*is_temp = 1;
+	float lanes[4];
+	
+	_mm_storeu_ps(lanes, *p->v);
 	
 	array_init(&zv);
-	add_next_index_double(&zv, (*p->v)[0]);
-	add_next_index_double(&zv, (*p->v)[1]);
-	add_next_index_double(&zv, (*p->v)[2]);
-	add_next_index_double(&zv, (*p->v)[3]);
+	add_next_index_double(&zv, (double) lanes[0]);
+	add_next_index_double(&zv, (double) lanes[1]);
+	add_next_index_double(&zv, (double) lanes[2]);
+	add_next_index_double(&zv, (double) lanes[3]);
+
+	*is_temp = 1;
+
 	return Z_ARRVAL(zv);
 }
 /* }}} */
@@ -260,30 +264,33 @@ static zval *php_float32x4_read( zval *object, zval *member, int type, const str
 {
 	php_float32x4_t *p = php_float32x4_fetch_ex(object);
 	zval *property = &EG(uninitialized_zval);
-	
+	float *lanes;
+			
 	if (!member || Z_TYPE_P(member) != IS_STRING || !Z_STRLEN_P(member)) {
 		return property;
 	}
+
+	_mm_storeu_ps(lanes, *p->v);
 		
 	switch (Z_STRVAL_P(member)[0]) {
 		case 'x':
 			ALLOC_INIT_ZVAL(property);
-			ZVAL_DOUBLE(property, (*p->v)[0]);
+			ZVAL_DOUBLE(property, lanes[0]);
 		break;
 		
 		case 'y':
 			ALLOC_INIT_ZVAL(property);
-			ZVAL_DOUBLE(property, (*p->v)[1]);
+			ZVAL_DOUBLE(property, lanes[1]);
 		break;
 		
 		case 'z':
 			ALLOC_INIT_ZVAL(property);
-			ZVAL_DOUBLE(property, (*p->v)[2]);
+			ZVAL_DOUBLE(property, lanes[2]);
 		break;
 		
 		case 'w':
 			ALLOC_INIT_ZVAL(property);
-			ZVAL_DOUBLE(property, (*p->v)[3]);
+			ZVAL_DOUBLE(property, lanes[3]);
 		break;
 	}
 	
