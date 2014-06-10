@@ -264,8 +264,8 @@ static zval *php_float32x4_read( zval *object, zval *member, int type, const str
 {
 	php_float32x4_t *p = php_float32x4_fetch_ex(object);
 	zval *property = &EG(uninitialized_zval);
-	float *lanes;
-			
+	float lanes[4];
+	
 	if (!member || Z_TYPE_P(member) != IS_STRING || !Z_STRLEN_P(member)) {
 		return property;
 	}
