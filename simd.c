@@ -299,6 +299,13 @@ PHP_MINIT_FUNCTION(simd)
 }
 /* }}} */
 
+PHP_RINIT_FUNCTION(simd) 
+{
+#ifdef ZTS
+	ZEND_TSRMLS_CACHE_UPDATE();
+#endif
+}
+
 /* {{{ PHP_MINFO_FUNCTION
  */
 PHP_MINFO_FUNCTION(simd)
@@ -317,7 +324,7 @@ zend_module_entry simd_module_entry = {
 	NULL,
 	PHP_MINIT(simd),
 	NULL,
-	NULL,
+	PHP_RINIT(simd),
 	NULL,
 	PHP_MINFO(simd),
 	PHP_SIMD_VERSION,
@@ -327,6 +334,9 @@ zend_module_entry simd_module_entry = {
 
 #ifdef COMPILE_DL_SIMD
 ZEND_GET_MODULE(simd)
+#if ZTS && defined(COMPILE_DL_SIMD)
+	ZEND_TSRMLS_CACHE_DEFINE();
+#endif
 #endif
 
 /*
