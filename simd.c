@@ -133,7 +133,7 @@ php_float32x4_method(or)
 php_float32x4_method(xor)
 
 PHP_METHOD(Float32x4, offsetGet)    {
-	long offset = -1;
+	zend_long offset = -1;
 	php_float32x4_t *p = php_float32x4_fetch();
 	
 	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "l", &offset) != SUCCESS) {
