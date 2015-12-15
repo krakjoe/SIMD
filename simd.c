@@ -320,7 +320,7 @@ PHP_MINFO_FUNCTION(simd)
  */
 zend_module_entry simd_module_entry = {
 	STANDARD_MODULE_HEADER,
-	"simd",
+	PHP_SIMD_EXTNAME,
 	NULL,
 	PHP_MINIT(simd),
 	NULL,
