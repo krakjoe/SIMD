@@ -41,7 +41,7 @@ zend_object_handlers php_float32x4_handlers;
 	zval *zo; \
 	php_float32x4_t *op1, *op2, *result; \
 	\
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "O", &zo, php_float32x4_ce) != SUCCESS) { \
+	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "O", &zo, php_float32x4_ce) != SUCCESS) { \
 		return; \
 	} \
 	\
@@ -74,10 +74,10 @@ typedef struct _php_float32x4_t {
 } php_float32x4_t;
 
 ZEND_BEGIN_ARG_INFO_EX(php_float32x4_construct_arginfo, 0, 0, 4)
-	ZEND_ARG_INFO(0, x)
-	ZEND_ARG_INFO(0, y)
-	ZEND_ARG_INFO(0, z)
-	ZEND_ARG_INFO(0, w)
+	ZEND_ARG_TYPE_INFO(0, x, IS_DOUBLE, 0)
+	ZEND_ARG_TYPE_INFO(0, y, IS_DOUBLE, 0)
+	ZEND_ARG_TYPE_INFO(0, z, IS_DOUBLE, 0)
+	ZEND_ARG_TYPE_INFO(0, w, IS_DOUBLE, 0)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(php_float32x4_op_arginfo, 0, 0, 1)
@@ -106,7 +106,7 @@ PHP_METHOD(Float32x4, __construct) {
 	float  flanes[4] = php_float32x4_empty;
 	php_float32x4_t *p = php_float32x4_fetch();
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddd", &lanes[0], &lanes[1], &lanes[2], &lanes[3]) != SUCCESS) {
+	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "dddd", &lanes[0], &lanes[1], &lanes[2], &lanes[3]) != SUCCESS) {
 		return;
 	}
 	
@@ -136,7 +136,7 @@ PHP_METHOD(Float32x4, offsetGet)    {
 	long offset = -1;
 	php_float32x4_t *p = php_float32x4_fetch();
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &offset) != SUCCESS) {
+	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "l", &offset) != SUCCESS) {
 		return;
 	}
 	
