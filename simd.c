@@ -254,21 +254,10 @@ static zval *php_float32x4_read( zval *object, zval *member, int type, void **ca
 	}
 
 	switch (Z_STRVAL_P(member)[0]) {
-		case 'x':
-			ZVAL_DOUBLE(rv, (*p->v)[0]);
-		break;
-		
-		case 'y':
-			ZVAL_DOUBLE(rv, (*p->v)[1]);
-		break;
-		
-		case 'z':
-			ZVAL_DOUBLE(rv, (*p->v)[2]);
-		break;
-		
-		case 'w':
-			ZVAL_DOUBLE(rv, (*p->v)[3]);
-		break;
+		case 'x': ZVAL_DOUBLE(rv, (*p->v)[0]); break;
+		case 'y': ZVAL_DOUBLE(rv, (*p->v)[1]); break;
+		case 'z': ZVAL_DOUBLE(rv, (*p->v)[2]); break;
+		case 'w': ZVAL_DOUBLE(rv, (*p->v)[3]); break;
 	}
 	
 	return property;
