@@ -32,6 +32,11 @@
 zend_class_entry *php_float32x4_ce;
 zend_object_handlers php_float32x4_handlers;
 
+typedef struct _php_float32x4_t {
+	__m128 *v;
+	zend_object std;
+} php_float32x4_t;
+
 #define php_float32x4_from(o)		 (php_float32x4_t*) ((char*)o - XtOffsetOf(php_float32x4_t, std))
 #define php_float32x4_fetch_ex(o)    php_float32x4_from(Z_OBJ_P(o))
 #define php_float32x4_fetch()        php_float32x4_fetch_ex(getThis())
@@ -67,11 +72,6 @@ zend_object_handlers php_float32x4_handlers;
 	*result->v = _mm_##n##_ps(*v1->v, *v2->v); \
 	\
 	return SUCCESS;
-
-typedef struct _php_float32x4_t {
-	__m128 *v;
-	zend_object std;
-} php_float32x4_t;
 
 ZEND_BEGIN_ARG_INFO_EX(php_float32x4_construct_arginfo, 0, 0, 4)
 	ZEND_ARG_TYPE_INFO(0, x, IS_DOUBLE, 0)
