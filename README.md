@@ -2,7 +2,7 @@ SIMD
 ====
 *Simple Instructions, Multiple Data*
 
-[![Build Status](https://travis-ci.org/krakjoe/simd.svg?branch=master)](https://travis-ci.org/krakjoe/simd)
+[![Build Status](https://travis-ci.org/krakjoe/SIMD.svg?branch=master)](https://travis-ci.org/krakjoe/SIMD)
 
 This extension exposes SIMD SSE instructions for use in PHP ... for whatever reason you like ...
 
