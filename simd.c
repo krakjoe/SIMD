@@ -32,7 +32,8 @@
 zend_class_entry *php_float32x4_ce;
 zend_object_handlers php_float32x4_handlers;
 
-#define php_float32x4_fetch_ex(o)    ((php_float32x4_t*) zend_object_store_get_object(o TSRMLS_CC))
+#define php_float32x4_from(o)		 (php_float32x4_t*) ((char*)o - XtOffsetOf(php_float32x4_t, std))
+#define php_float32x4_fetch_ex(o)    php_float32x4_from(Z_OBJ_P(o))
 #define php_float32x4_fetch()        php_float32x4_fetch_ex(getThis())
 #define php_float32x4_empty          {0.0, 0.0, 0.0, 0.0}
 
@@ -40,7 +41,7 @@ zend_object_handlers php_float32x4_handlers;
 	zval *zo; \
 	php_float32x4_t *op1, *op2, *result; \
 	\
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "O", &zo, php_float32x4_ce) != SUCCESS) { \
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "O", &zo, php_float32x4_ce) != SUCCESS) { \
 		return; \
 	} \
 	\
@@ -68,9 +69,8 @@ zend_object_handlers php_float32x4_handlers;
 	return SUCCESS;
 
 typedef struct _php_float32x4_t {
-	zend_object std;
-	zend_object_handle h;
 	__m128 *v;
+	zend_object std;
 } php_float32x4_t;
 
 ZEND_BEGIN_ARG_INFO_EX(php_float32x4_construct_arginfo, 0, 0, 4)
@@ -106,7 +106,7 @@ PHP_METHOD(Float32x4, __construct) {
 	float  flanes[4] = php_float32x4_empty;
 	php_float32x4_t *p = php_float32x4_fetch();
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &lanes[0], &lanes[1], &lanes[2], &lanes[3]) != SUCCESS) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddd", &lanes[0], &lanes[1], &lanes[2], &lanes[3]) != SUCCESS) {
 		return;
 	}
 	
@@ -136,7 +136,7 @@ PHP_METHOD(Float32x4, offsetGet)    {
 	long offset = -1;
 	php_float32x4_t *p = php_float32x4_fetch();
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &offset) != SUCCESS) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &offset) != SUCCESS) {
 		return;
 	}
 	
@@ -172,40 +172,27 @@ zend_function_entry php_float32x4_methods[] = {
 	PHP_FE_END
 };
 
-static inline void php_float32x4_destroy(void *zobject, zend_object_handle handle TSRMLS_DC) {
-	zend_objects_destroy_object(zobject, handle TSRMLS_CC);
-}
+static inline void php_float32x4_free(zend_object *zobject) {
+	php_float32x4_t *p = php_float32x4_from(zobject);
 
-static inline void php_float32x4_free(void *zobject TSRMLS_DC) {
-	php_float32x4_t *p = 
-		(php_float32x4_t *) zobject;
-
-	zend_object_std_dtor(&p->std TSRMLS_CC);
+	zend_object_std_dtor(&p->std);
 
 	free(p->v);
-	efree(p);
 }
 
-static inline zend_object_value php_float32x4_create(zend_class_entry *ce TSRMLS_DC) {
-	zend_object_value value;
+static inline zend_object* php_float32x4_create(zend_class_entry *ce) {
 	php_float32x4_t *p = 
-		(php_float32x4_t*) ecalloc(1, sizeof(php_float32x4_t));
+		(php_float32x4_t*) ecalloc(1, sizeof(php_float32x4_t) + zend_object_properties_size(ce));
 	
-	zend_object_std_init(&p->std, ce TSRMLS_CC);
+	zend_object_std_init(&p->std, ce);
 	object_properties_init(&p->std, ce);
 
-	p->h = zend_objects_store_put(
-		p, 
-		php_float32x4_destroy, 
-		php_float32x4_free, NULL TSRMLS_CC);
+	p->std.handlers = &php_float32x4_handlers;
 	
-	value.handle   = p->h;
-	value.handlers = &php_float32x4_handlers;
-	
-	return value;
+	return &p->std;
 }
 
-static HashTable *php_float32x4_dump(zval *obj, int *is_temp TSRMLS_DC) /* {{{ */
+static HashTable *php_float32x4_dump(zval *obj, int *is_temp) /* {{{ */
 {
 	php_float32x4_t *p = php_float32x4_fetch_ex(obj);
 	zval zv;
@@ -222,7 +209,7 @@ static HashTable *php_float32x4_dump(zval *obj, int *is_temp TSRMLS_DC) /* {{{ *
 }
 /* }}} */
 
-static int php_float32x4_operation(zend_uchar op, zval *returns, zval *op1, zval *op2 TSRMLS_DC) /* {{{ */
+static int php_float32x4_operation(zend_uchar op, zval *returns, zval *op1, zval *op2) /* {{{ */
 {
 	php_float32x4_t *p1 = php_float32x4_fetch_ex(op1),
 					*p2 = php_float32x4_fetch_ex(op2),
@@ -257,7 +244,7 @@ static int php_float32x4_operation(zend_uchar op, zval *returns, zval *op1, zval
 }
 /* }}} */
 
-static zval *php_float32x4_read( zval *object, zval *member, int type, const struct _zend_literal *key TSRMLS_DC ) /* {{{ */
+static zval *php_float32x4_read( zval *object, zval *member, int type, void **cache_slot, zval *rv) /* {{{ */
 {
 	php_float32x4_t *p = php_float32x4_fetch_ex(object);
 	zval *property = &EG(uninitialized_zval);
@@ -268,27 +255,21 @@ static zval *php_float32x4_read( zval *object, zval *member, int type, const str
 
 	switch (Z_STRVAL_P(member)[0]) {
 		case 'x':
-			ALLOC_INIT_ZVAL(property);
-			ZVAL_DOUBLE(property, (*p->v)[0]);
+			ZVAL_DOUBLE(rv, (*p->v)[0]);
 		break;
 		
 		case 'y':
-			ALLOC_INIT_ZVAL(property);
-			ZVAL_DOUBLE(property, (*p->v)[1]);
+			ZVAL_DOUBLE(rv, (*p->v)[1]);
 		break;
 		
 		case 'z':
-			ALLOC_INIT_ZVAL(property);
-			ZVAL_DOUBLE(property, (*p->v)[2]);
+			ZVAL_DOUBLE(rv, (*p->v)[2]);
 		break;
 		
 		case 'w':
-			ALLOC_INIT_ZVAL(property);
-			ZVAL_DOUBLE(property, (*p->v)[3]);
+			ZVAL_DOUBLE(rv, (*p->v)[3]);
 		break;
 	}
-	
-	Z_SET_REFCOUNT_P(property, 0);
 	
 	return property;
 } /* }}} */
@@ -300,9 +281,9 @@ PHP_MINIT_FUNCTION(simd)
 	zend_class_entry ce;
 	
 	INIT_CLASS_ENTRY(ce, "Float32x4", php_float32x4_methods);
-	php_float32x4_ce = zend_register_internal_class(&ce TSRMLS_CC);
+	php_float32x4_ce = zend_register_internal_class(&ce);
 	php_float32x4_ce->create_object = php_float32x4_create;
-	zend_class_implements(php_float32x4_ce TSRMLS_CC, 1, zend_ce_arrayaccess);
+	zend_class_implements(php_float32x4_ce, 1, zend_ce_arrayaccess);
 
 	memcpy(
 		&php_float32x4_handlers,
@@ -312,7 +293,8 @@ PHP_MINIT_FUNCTION(simd)
 	php_float32x4_handlers.do_operation     = php_float32x4_operation;
 	php_float32x4_handlers.get_debug_info   = php_float32x4_dump;
 	php_float32x4_handlers.read_property    = php_float32x4_read;
-
+	php_float32x4_handlers.free_obj			= php_float32x4_free;
+	php_float32x4_handlers.offset			= XtOffsetOf(php_float32x4_t, std);
 	return SUCCESS;
 }
 /* }}} */
