@@ -1,6 +1,6 @@
 SIMD
 ====
-*Simple Instructions, Multiple Data*
+*Single Instructions, Multiple Data*
 
 [![Build Status](https://travis-ci.org/krakjoe/SIMD.svg?branch=master)](https://travis-ci.org/krakjoe/SIMD)
 
