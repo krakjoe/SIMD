@@ -35,10 +35,10 @@ Operators
 
 The following operators will work on Float32x4 vectors as expected:
 
- * \\+ -> ```addition```
+ * \+ -> ```addition```
  * / -> ```division```
- * \\* -> ```multiplication```
- * \\- -> ```subtraction```
+ * \* -> ```multiplication```
+ * \- -> ```subtraction```
  * | -> ```bitwise or```
  * ^ -> ```bitwise xor```
  * & -> ```bitwise and```
