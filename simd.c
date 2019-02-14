@@ -26,10 +26,14 @@
 #include "php_ini.h"
 #include "ext/standard/info.h"
 #include "php_simd.h"
+
+#include "zend_exceptions.h"
 #include "zend_interfaces.h"
+
 #include <x86intrin.h>
 
 zend_class_entry *php_float32x4_ce;
+zend_class_entry *php_float32x4_exception_ce;
 zend_object_handlers php_float32x4_handlers;
 
 typedef struct _php_float32x4_t {
@@ -57,7 +61,9 @@ typedef struct _php_float32x4_t {
 	\
 	result = php_float32x4_fetch_ex(return_value); \
 	\
-	posix_memalign((void**) &result->v, 16, sizeof(__m128)); \
+	if (posix_memalign((void**) &result->v, 16, sizeof(__m128)) != SUCCESS) { \
+		zend_throw_exception_ex(php_float32x4_exception_ce, 0, "memory alignment error"); \
+	} \
 	\
 	*result->v = _mm_##n##_ps(*op1->v, *op2->v); \
 }
@@ -67,7 +73,9 @@ typedef struct _php_float32x4_t {
 	\
 	result = php_float32x4_fetch_ex(returns); \
 	\
-	posix_memalign((void**) &result->v, 16, sizeof(__m128)); \
+	if (posix_memalign((void**) &result->v, 16, sizeof(__m128)) != SUCCESS) { \
+		zend_throw_exception_ex(php_float32x4_exception_ce, 0, "memory alignment error"); \
+	} \
 	\
 	*result->v = _mm_##n##_ps(*v1->v, *v2->v); \
 	\
@@ -81,7 +89,7 @@ ZEND_BEGIN_ARG_INFO_EX(php_float32x4_construct_arginfo, 0, 0, 4)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(php_float32x4_op_arginfo, 0, 0, 1)
-	ZEND_ARG_OBJ_INFO(0, op, Float32x4, 0)
+	ZEND_ARG_OBJ_INFO(0, op, SIMD\\Float32x4, 0)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(php_float32x4_offsetGet_arginfo, 0, 0, 1)
@@ -115,8 +123,10 @@ PHP_METHOD(Float32x4, __construct) {
 	flanes[2] = (float) lanes[2];
 	flanes[3] = (float) lanes[3];
 	
-	posix_memalign(
-		(void**) &p->v, 16, sizeof(__m128));
+	if (posix_memalign(
+		(void**) &p->v, 16, sizeof(__m128)) != SUCCESS) {
+		zend_throw_exception_ex(php_float32x4_exception_ce, 0, "memory alignment error");
+	}
 	
 	*p->v = _mm_load_ps (flanes);
 }
@@ -269,7 +279,7 @@ PHP_MINIT_FUNCTION(simd)
 {
 	zend_class_entry ce;
 	
-	INIT_CLASS_ENTRY(ce, "Float32x4", php_float32x4_methods);
+	INIT_NS_CLASS_ENTRY(ce, "SIMD", "Float32x4", php_float32x4_methods);
 	php_float32x4_ce = zend_register_internal_class(&ce);
 	php_float32x4_ce->create_object = php_float32x4_create;
 	zend_class_implements(php_float32x4_ce, 1, zend_ce_arrayaccess);
@@ -284,6 +294,10 @@ PHP_MINIT_FUNCTION(simd)
 	php_float32x4_handlers.read_property    = php_float32x4_read;
 	php_float32x4_handlers.free_obj			= php_float32x4_free;
 	php_float32x4_handlers.offset			= XtOffsetOf(php_float32x4_t, std);
+
+	INIT_NS_CLASS_ENTRY(ce, "SIMD", "Exception", NULL);
+	php_float32x4_exception_ce = zend_register_internal_class_ex(&ce, zend_get_error_exception());
+
 	return SUCCESS;
 }
 /* }}} */

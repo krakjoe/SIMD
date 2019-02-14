@@ -24,7 +24,7 @@
 extern zend_module_entry simd_module_entry;
 #define phpext_simd_ptr &simd_module_entry
 
-#define PHP_SIMD_VERSION "1.0.0"
+#define PHP_SIMD_VERSION "2.0.0"
 #define PHP_SIMD_EXTNAME "simd"
 
 #ifdef PHP_WIN32

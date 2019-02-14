@@ -8,8 +8,9 @@ This extension exposes SIMD SSE instructions for use in PHP ... for whatever rea
 
 ```php
 <?php
-class Float32x4 {
-	public function __construct(float $x, float $y, float $z, float $w)
+class SIMD\Float32x4 {
+	public function __construct(float $x, float $y, float $z, float $w);
+
 	public function add(Float32x4 $v);
 	public function sub(Float32x4 $v);
 	public function div(Float32x4 $v);
